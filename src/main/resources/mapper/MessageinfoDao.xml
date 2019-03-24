@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.webblog.dao.MessageinfoDao">
+  <resultMap id="BaseResultMap" type="com.sun.webblog.entity.Messageinfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="articleUUID" jdbcType="VARCHAR" property="articleuuid" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+    <result column="isEnd" jdbcType="BIT" property="isend" />
+    <result column="fromUser" jdbcType="VARCHAR" property="fromuser" />
+    <result column="toUser" jdbcType="VARCHAR" property="touser" />
+    <result column="endTime" jdbcType="TIMESTAMP" property="endtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `type`, articleUUID, other, isEnd, fromUser, toUser, endTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from MessageInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from MessageInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sun.webblog.entity.Messageinfo" useGeneratedKeys="true">
+    insert into MessageInfo (`type`, articleUUID, other, 
+      isEnd, fromUser, toUser, 
+      endTime)
+    values (#{type,jdbcType=VARCHAR}, #{articleuuid,jdbcType=VARCHAR}, #{other,jdbcType=VARCHAR}, 
+      #{isend,jdbcType=BIT}, #{fromuser,jdbcType=VARCHAR}, #{touser,jdbcType=VARCHAR}, 
+      #{endtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sun.webblog.entity.Messageinfo" useGeneratedKeys="true">
+    insert into MessageInfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="articleuuid != null">
+        articleUUID,
+      </if>
+      <if test="other != null">
+        other,
+      </if>
+      <if test="isend != null">
+        isEnd,
+      </if>
+      <if test="fromuser != null">
+        fromUser,
+      </if>
+      <if test="touser != null">
+        toUser,
+      </if>
+      <if test="endtime != null">
+        endTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="articleuuid != null">
+        #{articleuuid,jdbcType=VARCHAR},
+      </if>
+      <if test="other != null">
+        #{other,jdbcType=VARCHAR},
+      </if>
+      <if test="isend != null">
+        #{isend,jdbcType=BIT},
+      </if>
+      <if test="fromuser != null">
+        #{fromuser,jdbcType=VARCHAR},
+      </if>
+      <if test="touser != null">
+        #{touser,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null">
+        #{endtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sun.webblog.entity.Messageinfo">
+    update MessageInfo
+    <set>
+      <if test="type != null">
+        `type` = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="articleuuid != null">
+        articleUUID = #{articleuuid,jdbcType=VARCHAR},
+      </if>
+      <if test="other != null">
+        other = #{other,jdbcType=VARCHAR},
+      </if>
+      <if test="isend != null">
+        isEnd = #{isend,jdbcType=BIT},
+      </if>
+      <if test="fromuser != null">
+        fromUser = #{fromuser,jdbcType=VARCHAR},
+      </if>
+      <if test="touser != null">
+        toUser = #{touser,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null">
+        endTime = #{endtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sun.webblog.entity.Messageinfo">
+    update MessageInfo
+    set `type` = #{type,jdbcType=VARCHAR},
+      articleUUID = #{articleuuid,jdbcType=VARCHAR},
+      other = #{other,jdbcType=VARCHAR},
+      isEnd = #{isend,jdbcType=BIT},
+      fromUser = #{fromuser,jdbcType=VARCHAR},
+      toUser = #{touser,jdbcType=VARCHAR},
+      endTime = #{endtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--获取还没有被处理的消息-->
+    <select id="getMessage" resultMap="BaseResultMap">
+      select  * from MessageInfo where isEnd=false
+    </select>
+</mapper>

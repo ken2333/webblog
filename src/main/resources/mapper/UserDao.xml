@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.webblog.dao.UserDao">
+  <resultMap id="BaseResultMap" type="com.sun.webblog.entity.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="userName" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="question" jdbcType="VARCHAR" property="question" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
+    <result column="birthday" jdbcType="DATE" property="birthday" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="aliasName" jdbcType="VARCHAR" property="aliasname" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="idCard" jdbcType="VARCHAR" property="idcard" />
+    <result column="phoneNum" jdbcType="VARCHAR" property="phonenum" />
+    <result column="postion" jdbcType="VARCHAR" property="postion" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userName, `password`, sex, `status`, question, answer, birthday, email, aliasName,
+    `location`, idCard, phoneNum, postion
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from User
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from User
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sun.webblog.entity.User" useGeneratedKeys="true">
+    insert into User (userName, `password`, sex,
+      `status`, question, answer,
+      birthday, email, aliasName,
+      `location`, idCard, phoneNum,
+      postion)
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR},
+      #{status,jdbcType=INTEGER}, #{question,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR},
+      #{birthday,jdbcType=DATE}, #{email,jdbcType=VARCHAR}, #{aliasname,jdbcType=VARCHAR},
+      #{location,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{phonenum,jdbcType=VARCHAR},
+      #{postion,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sun.webblog.entity.User" useGeneratedKeys="true">
+    insert into User
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        userName,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="question != null">
+        question,
+      </if>
+      <if test="answer != null">
+        answer,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="aliasname != null">
+        aliasName,
+      </if>
+      <if test="location != null">
+        `location`,
+      </if>
+      <if test="idcard != null">
+        idCard,
+      </if>
+      <if test="phonenum != null">
+        phoneNum,
+      </if>
+      <if test="postion != null">
+        postion,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="question != null">
+        #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null">
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="aliasname != null">
+        #{aliasname,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null">
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenum != null">
+        #{phonenum,jdbcType=VARCHAR},
+      </if>
+      <if test="postion != null">
+        #{postion,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sun.webblog.entity.User">
+    update User
+    <set>
+      <if test="username != null">
+        userName = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="question != null">
+        question = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null">
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="aliasname != null">
+        aliasName = #{aliasname,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null">
+        `location` = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null">
+        idCard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenum != null">
+        phoneNum = #{phonenum,jdbcType=VARCHAR},
+      </if>
+      <if test="postion != null">
+        postion = #{postion,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sun.webblog.entity.User">
+    update User
+    set userName = #{username,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=CHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      question = #{question,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      email = #{email,jdbcType=VARCHAR},
+      aliasName = #{aliasname,jdbcType=VARCHAR},
+      `location` = #{location,jdbcType=VARCHAR},
+      idCard = #{idcard,jdbcType=VARCHAR},
+      phoneNum = #{phonenum,jdbcType=VARCHAR},
+      postion = #{postion,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByUserNameAndPwd"  resultMap="BaseResultMap" >
+    select  userName,id,sex,email,question,aliasName,location,phoneNum,postion  from  User  where userName=#{arg0} and  password=#{arg1}
+  </select>
+  <select id="getAliasName"  resultMap="BaseResultMap" >
+    select   id,aliasName  from  User
+  </select>
+  <select id="getByLocation" resultMap="BaseResultMap">
+      select   id   from  User  where location=#{arg0} and postion="管理员"
+  </select>
+</mapper>

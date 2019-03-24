@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.webblog.dao.ArticleDao">
+  <resultMap id="BaseResultMap" type="com.sun.webblog.entity.Article">
+    <id column="Article_id" jdbcType="INTEGER" property="id" />
+    <result column="Article_titile" jdbcType="VARCHAR" property="titile" />
+    <result column="Article_author" jdbcType="VARCHAR" property="author" />
+    <result column="Article_createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="Article_pageview" jdbcType="INTEGER" property="pageview" />
+    <result column="Article_status" jdbcType="VARCHAR" property="status" />
+    <result column="Article_type" jdbcType="VARCHAR" property="type" />
+    <result column="Article_canDiscuss" jdbcType="BIT" property="candiscuss" />
+    <result column="Article_UUID" jdbcType="VARCHAR" property="uuid" />
+    <result column="Article_position" jdbcType="VARCHAR" property="position" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.sun.webblog.entity.Article">
+    <result column="Article_content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Article.id as Article_id, Article.titile as Article_titile, Article.author as Article_author,
+    Article.createTime as Article_createTime, Article.pageview as Article_pageview, Article.`status` as `Article_status`,
+    Article.`type` as `Article_type`, Article.canDiscuss as Article_canDiscuss, Article.UUID as Article_UUID,
+    Article.`position` as `Article_position`
+  </sql>
+  <sql id="Blob_Column_List">
+    Article.content as Article_content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from Article Article
+    where Article.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from Article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sun.webblog.entity.Article" useGeneratedKeys="true">
+    insert into Article (titile, author, createTime,
+      pageview, `status`, `type`,
+      canDiscuss, UUID, `position`,
+      content)
+    values (#{titile,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
+      #{pageview,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+      #{candiscuss,jdbcType=BIT}, #{uuid,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR},
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sun.webblog.entity.Article" useGeneratedKeys="true">
+    insert into Article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="titile != null">
+        titile,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="pageview != null">
+        pageview,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="candiscuss != null">
+        canDiscuss,
+      </if>
+      <if test="uuid != null">
+        UUID,
+      </if>
+      <if test="position != null">
+        `position`,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="titile != null">
+        #{titile,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pageview != null">
+        #{pageview,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="candiscuss != null">
+        #{candiscuss,jdbcType=BIT},
+      </if>
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sun.webblog.entity.Article">
+    update Article
+    <set>
+      <if test="titile != null">
+        titile = #{titile,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pageview != null">
+        pageview = #{pageview,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="candiscuss != null">
+        canDiscuss = #{candiscuss,jdbcType=BIT},
+      </if>
+      <if test="uuid != null">
+        UUID = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        `position` = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sun.webblog.entity.Article">
+    update Article
+    set titile = #{titile,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      pageview = #{pageview,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=VARCHAR},
+      canDiscuss = #{candiscuss,jdbcType=BIT},
+      UUID = #{uuid,jdbcType=VARCHAR},
+      `position` = #{position,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sun.webblog.entity.Article">
+    update Article
+    set titile = #{titile,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      pageview = #{pageview,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=VARCHAR},
+      canDiscuss = #{candiscuss,jdbcType=BIT},
+      UUID = #{uuid,jdbcType=VARCHAR},
+      `position` = #{position,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--分页-->
+  <select id="selectByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from  Article
+  </select>
+  <select id="getArticle" resultType="java.util.HashMap">
+SELECT Article.* ,GROUP_CONCAT(Tag.tagName) as tags  FROM  Article   INNER  JOIN  ArticleAndTags on  Article.id=ArticleAndTags.articleId and Article.id=#{arg0} INNER  JOIN  Tag on Tag.id=ArticleAndTags.tagId ORDER BY Tag.tagName
+  </select>
+  <select id="getID"  resultType="java.lang.Integer" >
+    select
+    Article.id
+    from Article Article
+    where Article.UUID = #{arg0}
+  </select>
+
+  <select id="getByUUID"  resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from Article Article
+    where Article.UUID = #{arg0}
+  </select>
+</mapper>
