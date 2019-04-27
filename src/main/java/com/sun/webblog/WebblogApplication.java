@@ -9,13 +9,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 @SpringBootApplication
 @MapperScan("com.sun.webblog.dao")
+@EnableScheduling
 public class WebblogApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(WebblogApplication.class, args);
     }
 

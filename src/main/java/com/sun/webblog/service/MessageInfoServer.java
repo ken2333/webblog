@@ -77,7 +77,7 @@ public class MessageInfoServer {
     }
 
     //定时任务
-    @Scheduled(cron = "/5 * * * ?")
+
     public void timeout() throws IOException {
         System.out.println("执行定时任务");
         List<Messageinfo> message = messageinfoDao.getMessage();

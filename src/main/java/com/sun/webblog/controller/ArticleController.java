@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.sun.webblog.dao.ArticleDao;
 import com.sun.webblog.entity.Article;
 import com.sun.webblog.entity.Tag;
+import com.sun.webblog.service.ArticleService;
 import com.sun.webblog.service.MessageInfoServer;
 import com.sun.webblog.service.TagService;
 import com.sun.webblog.service.UserService;
@@ -49,6 +50,9 @@ public class ArticleController {
 
     @Autowired
     MessageInfoServer messageInfoServer;
+
+    @Autowired
+    ArticleService  articleService;
 
     @RequestMapping(value = "/add",produces = "application/json;charset=UTF-8")
     public String add(@RequestBody JSONObject object) throws IOException {
@@ -100,7 +104,7 @@ public class ArticleController {
     public String pages(@RequestBody JSONObject object)
     {
         PageHelper.startPage(object.getInteger("start"), object.getInteger("limit"));
-        Page<Article> articles = dao.selectByPage();
+        Page<Article> articles = dao.selectByPageByUserID(object.getString("userID"),null);
         PageInfo<Article> pageInfo=new PageInfo<>(articles);
         return   JSONObject.toJSONString(pageInfo);
     }
@@ -111,8 +115,18 @@ public class ArticleController {
 
         //Article article = dao.selectByPrimaryKey(object.getInteger("id"));
          Map<String, Object> article = dao.getArticle(object.getInteger("id"));
+        int pageView = articleService.addArticlePageView(object.getString("id"));
+        article.put("pageview",pageView);
         return  JSONObject.toJSONString(article);
     }
 
-    //更具tags名称来返回tagsid，同时插入到中间表中
+    @RequestMapping("getDayHot")
+    public String getDayHot(String positon)
+    {
+
+        return null;
+    };
+
+
+
 }

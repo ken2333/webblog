@@ -2,6 +2,7 @@ package com.sun.webblog.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,9 @@ import java.util.List;
 public class Hello {
 
     @Autowired
+    private ApplicationContext applicationContext;
+
+    @Autowired
     RedisTemplate<String,Object> redisTemplate;
 @RequestMapping("hello")
 public String test(HttpServletRequest request, HttpServletResponse response)
@@ -42,8 +46,11 @@ public String test(HttpServletRequest request, HttpServletResponse response)
 }
 
 @RequestMapping("hello2")
-    public String add()
+    public String add(HttpServletRequest request)
 {
+
+    String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
+    System.out.println(beanDefinitionNames);
     return "hello2";
 }
 

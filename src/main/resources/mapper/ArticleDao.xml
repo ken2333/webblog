@@ -182,7 +182,7 @@
   <select id="selectByPage" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from  Article
+    from  Article order  by pageview desc
   </select>
   <select id="getArticle" resultType="java.util.HashMap">
 SELECT Article.* ,GROUP_CONCAT(Tag.tagName) as tags  FROM  Article   INNER  JOIN  ArticleAndTags on  Article.id=ArticleAndTags.articleId and Article.id=#{arg0} INNER  JOIN  Tag on Tag.id=ArticleAndTags.tagId ORDER BY Tag.tagName
@@ -199,5 +199,30 @@ SELECT Article.* ,GROUP_CONCAT(Tag.tagName) as tags  FROM  Article   INNER  JOIN
     <include refid="Base_Column_List" />
     from Article Article
     where Article.UUID = #{arg0}
+  </select>
+  
+  <select id="getDayHot" resultMap="BaseResultMap" >
+  select * from Article where position=#{arg0}  order by pageview desc
+  </select>
+
+ <update id="updateDayHot" >
+    update  Article set  pageview=#{arg0}
+    where id=#{arg1}
+ </update>
+
+  <!--分页条件分页-->
+  <select id="selectByPageByUserID" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from  Article    where  1=1
+
+    <if test="userID!=null">
+     and  author=#{userID,jdbcType=VARCHAR}
+    </if>
+
+    <if test="title!=null">
+      and  title like   #{title,jdbcType=VARCHAR}
+    </if>
+    order  by pageview desc
   </select>
 </mapper>
