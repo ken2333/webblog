@@ -13,7 +13,11 @@ import com.sun.webblog.service.MessageInfoServer;
 import com.sun.webblog.service.TagService;
 import com.sun.webblog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.repository.query.Param;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author ken
@@ -53,6 +54,9 @@ public class ArticleController {
 
     @Autowired
     ArticleService  articleService;
+
+    @Resource
+    RedisTemplate<String ,Object>redisTemplate;
 
     @RequestMapping(value = "/add",produces = "application/json;charset=UTF-8")
     public String add(@RequestBody JSONObject object) throws IOException {
@@ -104,7 +108,16 @@ public class ArticleController {
     public String pages(@RequestBody JSONObject object)
     {
         PageHelper.startPage(object.getInteger("start"), object.getInteger("limit"));
-        Page<Article> articles = dao.selectByPageByUserID(object.getString("userID"),null);
+        Page<Article> articles =null;
+        if(StringUtils.hasText(object.getString("input")))
+        {
+            articles=dao.selectByPageByUserID(null,object.getString("input"));
+
+        }
+        else
+        {
+            articles=dao.selectByPageByUserID(object.getString("userID"),null);
+        }
         PageInfo<Article> pageInfo=new PageInfo<>(articles);
         return   JSONObject.toJSONString(pageInfo);
     }
@@ -115,7 +128,8 @@ public class ArticleController {
 
         //Article article = dao.selectByPrimaryKey(object.getInteger("id"));
          Map<String, Object> article = dao.getArticle(object.getInteger("id"));
-        int pageView = articleService.addArticlePageView(object.getString("id"));
+        Integer pageView = articleService.addArticlePageView(object.getString("id"), (String) article.get("titile") );
+        pageView=pageView+(Integer) article.get("pageview");
         article.put("pageview",pageView);
         return  JSONObject.toJSONString(article);
     }
@@ -123,10 +137,42 @@ public class ArticleController {
     @RequestMapping("getDayHot")
     public String getDayHot(String positon)
     {
-
-        return null;
+        Set<ZSetOperations.TypedTuple<Object>> everyHot = redisTemplate.opsForZSet().reverseRangeWithScores("everyHot", 0, 9);
+        List<HashMap<String,String>> list=new ArrayList<>();
+        if (!everyHot.isEmpty()) {
+            Iterator<ZSetOperations.TypedTuple<Object>> iterator = everyHot.iterator();
+            while(iterator.hasNext())
+            {
+                ZSetOperations.TypedTuple<Object> next = iterator.next();
+                String value = (String) next.getValue();
+                Double score = next.getScore();
+                String[] split = value.split("::");
+                String id=split[1];
+                String title=split[2];
+                HashMap<String,String> map=new HashMap<>();
+                map.put("id",id);
+                map.put("title",title);
+                list.add(map);
+            }
+        }
+        String string = JSONObject.toJSONString(list);
+        return string;
     };
 
+    public String getTitleById(String id)
+    {
+        HashOperations<String, Object, Object> forHash = redisTemplate.opsForHash();
+        String title="article::"+id+"::title";
+        title = (String) forHash.get("article", title);
+        if(StringUtils.isEmpty(title))
+        {
+            JSONObject jsonObject=JSONObject.parseObject("{\"id\":\""+id+"\"}");
+            String byId = getById(jsonObject);
+            return       (String) forHash.get("article", title);
+        }
+        else
+        return     title;
+    }
 
 
 }

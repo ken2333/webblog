@@ -221,8 +221,9 @@ SELECT Article.* ,GROUP_CONCAT(Tag.tagName) as tags  FROM  Article   INNER  JOIN
     </if>
 
     <if test="title!=null">
-      and  title like   #{title,jdbcType=VARCHAR}
+      and  titile like   #{title,jdbcType=VARCHAR}
     </if>
+
     order  by pageview desc
   </select>
 </mapper>

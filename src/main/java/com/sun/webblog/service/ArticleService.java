@@ -27,10 +27,10 @@ public class ArticleService {
     ArticleDao articleDao;
 
     //实现对于每日热点功能
-    public int  addArticlePageView(String articleID)
+    public int  addArticlePageView(String articleID,String title)
     {
         ZSetOperations<String, Object> zSet = redisTemplate.opsForZSet();
-        String key="article::"+articleID;
+        String key="article::"+articleID+"::"+title;
         Double erveryHot = zSet.incrementScore(ArticleService.everyHot, key, 1);
         return   erveryHot.intValue();
     }
