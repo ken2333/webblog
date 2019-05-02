@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.webblog.dao.QuestionandanswerDao">
+  <resultMap id="BaseResultMap" type="com.sun.webblog.entity.Questionandanswer">
+    <id column="QuestionAndAnswer_id" jdbcType="INTEGER" property="id" />
+    <result column="QuestionAndAnswer_question" jdbcType="VARCHAR" property="question" />
+    <result column="QuestionAndAnswer_answer" jdbcType="VARCHAR" property="answer" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    QuestionAndAnswer.id as QuestionAndAnswer_id, QuestionAndAnswer.question as QuestionAndAnswer_question, 
+    QuestionAndAnswer.answer as QuestionAndAnswer_answer
+  </sql>
+  <select id="selectByExample" parameterType="com.sun.webblog.entity.QuestionandanswerExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from QuestionAndAnswer QuestionAndAnswer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from QuestionAndAnswer QuestionAndAnswer
+    where QuestionAndAnswer.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from QuestionAndAnswer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sun.webblog.entity.QuestionandanswerExample">
+    delete from QuestionAndAnswer QuestionAndAnswer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.sun.webblog.entity.Questionandanswer" useGeneratedKeys="true">
+    insert into QuestionAndAnswer (question, answer)
+    values (#{question,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.sun.webblog.entity.Questionandanswer" useGeneratedKeys="true">
+    insert into QuestionAndAnswer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="question != null">
+        question,
+      </if>
+      <if test="answer != null">
+        answer,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="question != null">
+        #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null">
+        #{answer,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sun.webblog.entity.QuestionandanswerExample" resultType="java.lang.Long">
+    select count(*) from QuestionAndAnswer QuestionAndAnswer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update QuestionAndAnswer QuestionAndAnswer
+    <set>
+      <if test="record.id != null">
+        QuestionAndAnswer.id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.question != null">
+        QuestionAndAnswer.question = #{record.question,jdbcType=VARCHAR},
+      </if>
+      <if test="record.answer != null">
+        QuestionAndAnswer.answer = #{record.answer,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update QuestionAndAnswer QuestionAndAnswer
+    set QuestionAndAnswer.id = #{record.id,jdbcType=INTEGER},
+      QuestionAndAnswer.question = #{record.question,jdbcType=VARCHAR},
+      QuestionAndAnswer.answer = #{record.answer,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sun.webblog.entity.Questionandanswer">
+    update QuestionAndAnswer
+    <set>
+      <if test="question != null">
+        question = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null">
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sun.webblog.entity.Questionandanswer">
+    update QuestionAndAnswer
+    set question = #{question,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getAnswer"  resultMap="BaseResultMap">
+    select distinct
+    <include refid="Base_Column_List" />
+    from QuestionAndAnswer QuestionAndAnswer
+    where
+    <foreach collection="array" item="item"  separator="OR">
+      question  like CONCAT('%',#{item},'%')
+    </foreach>
+ <!--   <if test="p1!=null">
+      <bind name="pattern1" value="'%' + _parameter.p1 + '%'" />
+      or question  like #{pattern1}
+    </if>
+    <if test="p2!=null">
+      <bind name="pattern2" value="'%' + _parameter.p2 + '%'" />
+      or question  like #{pattern2}
+    </if>
+    <if test="p3!=null">
+      <bind name="pattern3" value="'%' + _parameter.p3 + '%'" />
+      and question  like #{pattern3}
+    </if>
+    <if test="p4!=null">
+      <bind name="pattern4" value="'%' + _parameter.p4 + '%'" />
+      or question  like #{pattern4}
+    </if>
+    <if test="p5!=null">
+      <bind name="pattern5" value="'%' + _parameter.p5 + '%'" />
+      or question  like #{pattern5}
+    </if>-->
+  </select>
+
+</mapper>
