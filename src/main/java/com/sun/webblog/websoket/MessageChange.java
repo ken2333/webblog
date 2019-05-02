@@ -1,15 +1,19 @@
 package com.sun.webblog.websoket;
 
+import com.sun.webblog.service.QuestionAndAnswerService;
 import org.apache.tomcat.websocket.WsSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -28,34 +32,49 @@ public class MessageChange {
     private Session session;
 
 
+    private static QuestionAndAnswerService questionAndAnswerService;
+
+    @Autowired
+    public void setQuestionAndAnswerService(QuestionAndAnswerService questionAndAnswerService) {
+        MessageChange.questionAndAnswerService = questionAndAnswerService;
+    }
+
     @OnOpen
     public void onOpen(Session session) {
         System.out.println(session.getId() + "登录了");
     }
 
     /*
-    * 协议内容
-    * 1：userID,登录的时候发送过来
-    *
-    * 10:userID1:userID2:content  及时通信协议，userID1表示发送者，userID2要送的人，content表示内容
-    * */
+     * 协议内容
+     * 1：userID,登录的时候发送过来
+     *
+     * 10:userID1:userID2:content  及时通信协议，userID1表示发送者，userID2要送的人，content表示内容
+     * */
     @OnMessage
     public void onMessage(String message, Session session) throws Exception {
         String[] split = message.split(":");
         String type = split[0];
-        this.session=session;
+        this.session = session;
         switch (type) {
             case "1": {
                 String cotent = split[1];
-                map.put("user"+cotent,this);
+                map.put("user" + cotent, this);
                 break;
             }
-            case  "10":{
-                sendMessage(message,"user"+split[2]);
-                session.getBasicRemote().sendText("11:true:"+split[2]);
+            case "10": {
+                if (split[2].equals("1")) {
+                    session.getBasicRemote().sendText("11:true:" + split[2]);
+                    String anwser = questionAndAnswerService.getAnwser(split[3]);
+                    message = split[0] + ":" + split[2] + ":" + split[1] + ":" + anwser;
+                    sendMessage(message, "user" + split[1]);
+                } else
+                {
+                    sendMessage(message, "user" + split[2]);
+                    session.getBasicRemote().sendText("11:true:" + split[2]);
+                }
                 break;
             }
-            default:{
+            default: {
                 System.out.println("数据协议有问题");
             }
         }
@@ -67,11 +86,10 @@ public class MessageChange {
     }
 
     //根据传入的userid来发送消息
-    public void sendMessage(String message,String userID) throws IOException {
+    public void sendMessage(String message, String userID) throws IOException {
         MessageChange messageChange = map.get(userID);
-        Session session=messageChange.session;
-        if(session.isOpen())
-        {
+        Session session = messageChange.session;
+        if (session.isOpen()) {
             session.getBasicRemote().sendText(message);
         }
 
@@ -82,9 +100,9 @@ public class MessageChange {
 
 
     }
-    public boolean isContain(String key)
-    {
-        return  map.containsKey(key);
+
+    public boolean isContain(String key) {
+        return map.containsKey(key);
     }
 
 }
