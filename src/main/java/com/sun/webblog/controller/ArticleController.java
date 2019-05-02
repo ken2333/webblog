@@ -112,7 +112,6 @@ public class ArticleController {
         if(StringUtils.hasText(object.getString("input")))
         {
             articles=dao.selectByPageByUserID(null,object.getString("input"));
-
         }
         else
         {

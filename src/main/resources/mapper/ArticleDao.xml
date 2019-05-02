@@ -225,6 +225,6 @@ SELECT Article.* ,GROUP_CONCAT(Tag.tagName) as tags  FROM  Article   INNER  JOIN
       and  titile like    #{pattern}
     </if>
 
-    order  by pageview desc
+    order  by createTime desc
   </select>
 </mapper>

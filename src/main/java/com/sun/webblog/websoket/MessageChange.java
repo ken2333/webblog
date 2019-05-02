@@ -33,19 +33,30 @@ public class MessageChange {
         System.out.println(session.getId() + "登录了");
     }
 
+    /*
+    * 协议内容
+    * 1：userID,登录的时候发送过来
+    *
+    * 10:userID1:userID2:content  及时通信协议，userID1表示发送者，userID2要送的人，content表示内容
+    * */
     @OnMessage
     public void onMessage(String message, Session session) throws Exception {
-        System.out.println(message);
         String[] split = message.split(":");
         String type = split[0];
-        String cotent = split[1];
         this.session=session;
-        if(StringUtils.isEmpty(type)||StringUtils.isEmpty(cotent))
-            throw  new Exception("协议数据有问题！");
         switch (type) {
             case "1": {
+                String cotent = split[1];
                 map.put("user"+cotent,this);
                 break;
+            }
+            case  "10":{
+                sendMessage(message,"user"+split[2]);
+                session.getBasicRemote().sendText("11:true:"+split[2]);
+                break;
+            }
+            default:{
+                System.out.println("数据协议有问题");
             }
         }
     }
